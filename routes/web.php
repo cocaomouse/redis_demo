@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +17,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/site-visits',function () {
+    return '网站全局访问量:' . \Illuminate\Support\Facades\Redis::get('site_total_visits');
+});
+Route::get('/posts/popular',[PostController::class,'popular']);
+Route::get('/posts/{post}',[PostController::class,'show']);
