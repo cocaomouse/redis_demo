@@ -4,7 +4,7 @@ namespace App\Repos;
 
 use App\Models\Post;
 use Illuminate\Support\Facades\Redis;
-use Cache;
+use Illuminate\Support\Facades\Cache;
 
 class PostRepo
 {
@@ -20,11 +20,22 @@ class PostRepo
     {
         $cacheKey = 'post_' . $id;
 
-        // 查询redis中是否存在$chacheKey对应的$value,存在return $value;
+        // 查询redis中是否存在$cacheKey对应的$value,存在return $value;
         // 不存在则调用匿名函数生成$value,以$cacheKey为key,存入redis中;
-        return Cache::remember($cacheKey,1*60*60,function () use ($id,$columns) {
+        return Cache::remember($cacheKey,1*1*10,function () use ($id,$columns) {
             return $this->post->select($columns)->find($id);
         });
+
+        /*if (Redis::exists($cacheKey)) {
+            return unserialize(Redis::get($cacheKey));
+        }
+        $post = $this->post->select($columns)->find($id);
+        if (!$post) {
+            return null;
+        }
+        Redis::setex($cacheKey, 1 * 60 * 60, serialize($post));  // 缓存 1 小时
+        return $post;*/
+
     }
 
     public function getByManyId(array $ids,array $columns = ['*'], callable $callback = null)
@@ -38,12 +49,16 @@ class PostRepo
 
     public function addViews(Post $post)
     {
-        $post->increment('views');
+       /* $post->increment('views');
         if($post->save()) {
             // 将当前文章浏览数 +1，存储到对应 Sorted Set 的 score 字段
             Redis::zincrby('popular_posts',1,$post->id);
         }
-        return $post->views; //此处的$post不是$post->save()之后的集合,而是addViews($post)中一开始导入的$post
+        return $post->views; //此处的$post->views是$post->increment('views')之后的views值*/
+
+        // 推送消息数据到队列，通过异步进程处理数据库更新
+        Redis::rpush('post-views-increment',$post->id);
+        return ++$post->views;
     }
 
     // 热门文章排行榜
