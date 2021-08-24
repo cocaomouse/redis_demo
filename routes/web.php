@@ -22,3 +22,7 @@ Route::get('/site-visits',function () {
 });
 Route::get('/posts/popular',[PostController::class,'popular']);
 Route::get('/posts/{id}',[PostController::class,'show'])->where('id','[0-9]+');
+
+Route::get('/broadcast', function () {
+    return view('websocket');
+});

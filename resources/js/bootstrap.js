@@ -26,3 +26,11 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+const io = require('socket.io-client');
+
+const socket = io(window.location.hostname + ':3000');
+
+socket.on('laravel_database_test-channel:UserSignedUp', data => {
+    console.log(data.username);
+});
