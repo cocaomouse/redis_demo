@@ -16,21 +16,17 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  * allows your team to easily build robust real-time web applications.
  */
 
-// import Echo from 'laravel-echo';
+import Echo from 'laravel-echo';
 
-// window.Pusher = require('pusher-js');
+window.io = require('socket.io-client');
 
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: process.env.MIX_PUSHER_APP_KEY,
-//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-//     forceTLS: true
-// });
+window.Echo = new Echo({
+    broadcaster: 'socket.io',
+    host: window.location.hostname + ':6001'
+});
 
-const io = require('socket.io-client');
+//window.axios.defaults.headers.common['X-Socket-ID'] = window.Echo.socketId();
 
-const socket = io(window.location.hostname + ':3000');
-
-socket.on('laravel_database_test-channel:UserSignedUp', data => {
-    console.log(data.username);
+window.Echo.channel('laravel_database_test-channel').listen('UserSignedUp', event => {
+    console.log(event.user);
 });

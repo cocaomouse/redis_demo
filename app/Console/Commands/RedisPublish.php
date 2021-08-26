@@ -4,6 +4,10 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
+use App\Events\UserSignedUp;
+use App\Events\UserSendMessage;
+use App\Events\UserEnterGroup;
+use App\Models\User;
 
 class RedisPublish extends Command
 {
@@ -38,12 +42,11 @@ class RedisPublish extends Command
      */
     public function handle()
     {
-        $data = [
-            'event' => 'UserSignedUp',
-            'data' => [
-                'username' => 'Tester',
-            ]
-        ];
-        Redis::publish('test-channel',json_encode($data));
+        $user = User::find(1);
+        //event(new UserSignedUp($user));
+        $message = '你好, Tester!';
+        $groupId = 1;
+        //event(new UserSendMessage($user, $message, $groupId));
+        event(new UserEnterGroup($user, $groupId));
     }
 }

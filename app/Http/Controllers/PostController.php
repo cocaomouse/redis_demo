@@ -6,6 +6,7 @@ use App\Events\PostViewed;
 use App\Jobs\PostViewsIncrement;
 use App\Repos\PostRepo;
 use Illuminate\Support\Facades\Redis;
+use App\Models\User;
 
 class PostController extends Controller
 {

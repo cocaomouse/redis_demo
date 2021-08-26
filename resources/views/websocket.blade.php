@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>Laravel Websocket</title>
 
@@ -14,5 +15,17 @@
 <body class="antialiased">
 <h1>Broadcast Test</h1>
 </body>
-<script src="{{ asset('js/app.js') }}" type="text/javascript"></script>
+{{--<script src="{{ asset('js/app.js') }}" type="text/javascript"></script>
+<script type="text/javascript">
+    let groupId = 1;
+    window.Echo.private('wechat.group.' + groupId).listen('UserSendMessage', event => {
+        console.log(event.user.name + ' Says ' + event.message);
+    })
+
+    window.Echo.join('wechat.group.' + groupId)
+        .listen('UserEnterGroup', event => {
+            // 监听&接收服务端广播的消息
+            console.log(event.user.name + '加入了群聊');
+        });
+</script>--}}
 </html>
