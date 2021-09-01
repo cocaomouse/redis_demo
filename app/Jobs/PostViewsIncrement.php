@@ -37,5 +37,17 @@ class PostViewsIncrement implements ShouldQueue
         if ($this->post->increment('views')) {
             Redis::zincrby('popular_posts',1,$this->post->id);
         }
+
+        /*Redis::funnel('post.views.increment')
+            ->limit(60)
+            ->then(function () {
+                // 队列任务正常处理逻辑
+                if ($this->post->increment('views')) {
+                    Redis::zincrby('popular_posts', 1, $this->post->id);
+                }
+            }, function () {
+               // 超出处理频率上限,延迟60s再执行
+                $this->release(60);
+            });*/
     }
 }

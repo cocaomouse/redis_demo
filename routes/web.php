@@ -21,8 +21,11 @@ Route::get('/site-visits',function () {
     return '网站全局访问量:' . \Illuminate\Support\Facades\Redis::get('site_total_visits');
 });
 Route::get('/posts/popular',[PostController::class,'popular']);
-Route::get('/posts/{id}',[PostController::class,'show'])->where('id','[0-9]+');
+//Route::get('/posts/{id}',[PostController::class,'show'])->where('id','[0-9]+');
 
-Route::get('/broadcast', function () {
+/*Route::get('/broadcast', function () {
     return view('websocket');
-});
+});*/
+Route::get('/posts/create',[PostController::class,'create']);
+Route::get('/posts/store',[PostController::class,'store']);
+Route::get('/posts/{id}',[PostController::class,'show']);
